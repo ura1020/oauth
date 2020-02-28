@@ -40,7 +40,8 @@ def google_access_token(code, client_id, client_secret, uri):
   return ret
 
 def google_user_id(access_token):
-  res = requests.get("https://www.googleapis.com/oauth2/v1/userinfo", params={
+  res = requests.get("https://www.googleapis.com/oauth2/v1/userinfo",
+  params={
     'access_token': access_token
   })
   ret = json.loads(res.text)
@@ -97,7 +98,8 @@ def facebook_auth_url(client_id, redirect_uri):
   }.items()])
 
 def facebook_access_token(client_id, client_secret, redirect_uri, code):
-  res = requests.get("https://graph.facebook.com/v6.0/oauth/access_token", params={
+  res = requests.get("https://graph.facebook.com/v6.0/oauth/access_token",
+  params={
     'client_id': client_id,
     'redirect_uri': redirect_uri,
     'client_secret': client_secret,
@@ -108,8 +110,25 @@ def facebook_access_token(client_id, client_secret, redirect_uri, code):
   return ret
 
 def facebook_user_id(access_token):
-  res = requests.get("https://graph.facebook.com/me", params={
+  res = requests.get("https://graph.facebook.com/me",
+  params={
     'access_token': access_token
+  })
+  ret = json.loads(res.text)
+  logging.debug(ret)
+  return ret
+
+def instagram_auth_url(client_id, redirect_uri):
+  return "https://api.instagram.com/oauth/authorize/?client_id=%s&redirect_uri=%s&response_type=code" % (client_id, redirect_uri)
+
+def instagram_access_token(client_id ,client_secret ,redirect_uri ,code):
+  res = requests.post("https://api.instagram.com/oauth/access_token",
+  data={
+    'client_id': client_id,
+    'client_secret': client_secret,
+    'grant_type': 'authorization_code',
+    'redirect_uri': redirect_uri,
+    'code': code
   })
   ret = json.loads(res.text)
   logging.debug(ret)
