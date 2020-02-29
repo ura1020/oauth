@@ -91,3 +91,17 @@ if selected in ['5','yahoo','y']:
   logging.info('Authorization at yahoo japan')
   logging.info('-- reference')
   logging.info('https://developer.yahoo.co.jp/other/oauth/\n')
+
+  CLIENT_ID = input('CLIENT_ID: ')
+  CLIENT_SECRET = input('CLIENT_SECRET: ')
+  REDIRECT_URL = input('REDIRECT_URL: ')
+
+  url = yahoo_authorization(client_id=CLIENT_ID,redirect_uri=REDIRECT_URL)
+  logging.info("Please go here and authorize, %s" % url)
+
+  response_url = input('Paste the full redirect URL here: ')
+  code = response_param(response_url, 'code')
+
+  response = yahoo_v2_token(client_id=CLIENT_ID,client_secret=CLIENT_SECRET,redirect_uri=REDIRECT_URL,code=code)
+  response = yahoo_v1_attribute(response['access_token'])
+  logging.info("Your yahoo japan's user_id is '%s'" % response['user_id'])
